@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrailPulse - Sistema de Prontidão Fetter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde: #27ae60;
+            --verde-claro: #2ecc71;
+            --amarelo: #f39c12;
+            --amarelo-claro: #f1c40f;
+            --vermelho: #e74c3c;
+            --vermelho-claro: #e57373;
+            --azul: #3498db;
+            --azul-escuro: #2980b9;
+            --roxo: #9b59b6;
+            --cinza-claro: #f5f7fa;
+            --cinza-medio: #bdc3c7;
+            --cinza-escuro: #34495e;
+            --branco: #ffffff;
+            --preto: #2c3e50;
+            --amarelo-fetter: #FFC107; /* Amarelo Fetter */
+            --preto-fetter: #212121; /* Preto Fetter */
+            --sombra-suave: 0 4px 6px rgba(0,0,0,0.05 );
+            --sombra-media: 0 6px 12px rgba(0,0,0,0.1);
+            --sombra-forte: 0 10px 20px rgba(0,0,0,0.15);
+            --transicao: all 0.3s ease;
+            --borda-radius: 12px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--preto);
+            background-color: var(--cinza-claro);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent; /* Remove highlight on tap */
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: var(--preto-fetter);
+            color: var(--branco);
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--sombra-media);
+        }
+        
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h1.main-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            color: var(--amarelo-fetter);
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+            color: var(--cinza-medio);
+        }
+        
+        .card {
+            background: var(--branco);
+            border-radius: var(--borda-radius);
+            box-shadow: var(--sombra-suave);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: var(--transicao);
+        }
+        
+        .card:hover {
+            box-shadow: var(--sombra-media);
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--azul-escuro);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--cinza-claro);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--cinza-escuro);
+            font-size: 15px;
+        }
+        
+        .input-hint {
+            display: block;
+            font-size: 12px;
+            color: var(--cinza-medio);
+            margin-top: 4px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--cinza-medio);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transicao);
+            background-color: var(--branco);
+            -webkit-appearance: none; /* Remove default iOS styling */
+            appearance: none;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--amarelo-fetter);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .time-inputs input {
+            flex: 1;
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--amarelo-fetter), var(--amarelo));
+            color: var(--preto-fetter);
+            border: none;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transicao);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: var(--sombra-suave);
+            min-height: 48px; /* Minimum touch target size */
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: var(--sombra-suave);
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, var(--amarelo), var(--amarelo-claro));
+            box-shadow: var(--sombra-media);
+        }
+        
+        .status-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: var(--borda-radius);
+            margin: 25px 0;
+            color: var(--branco);
+            font-weight: 700;
+            font-size: 24px;
+            box-shadow: var(--sombra-media);
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 200% 200%;
+            opacity: 0.2;
+            z-index: 0;
+            animation: shimmer 2.5s infinite;
+        }
+        
+        .status-card-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .status-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .status-verde {
+            background: linear-gradient(135deg, var(--verde), var(--verde-claro));
+        }
+        
+        .status-verde::before {
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(46,204,113,0) 70%);
+        }
+        
+        .status-amarelo {
+            background: linear-gradient(135deg, var(--amarelo), var(--amarelo-claro));
+            color: var(--preto-fetter);
+        }
+        
+        .status-amarelo::before {
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(241,196,15,0) 70%);
+        }
+        
+        .status-vermelho {
+            background: linear-gradient(135deg, var(--vermelho), var(--vermelho-claro));
+        }
+        
+        .status-vermelho::before {
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(231,76,60,0) 70%);
+        }
+        
+        .recomendacao {
+            background-color: var(--cinza-claro);
+            border-radius: var(--borda-radius);
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid var(--azul);
+            box-shadow: var(--sombra-suave);
+        }
+        
+        .recomendacao h3 {
+            color: var(--azul-escuro);
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .recomendacao ul {
+            padding-left: 18px;
+        }
+        
+        .recomendacao li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .recomendacao-footer {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--cinza-medio);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin: 25px 0;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+        
+        .chart-bar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 35px;
+        }
+        
+        .chart-bar {
+            width: 25px;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease-out;
+            position: relative;
+        }
+        
+        .chart-bar-label {
+            margin-top: 8px;
+            font-size: 11px;
+            text-align: center;
+            color: var(--cinza-escuro);
+        }
+        
+        .chart-bar-value {
+            position: absolute;
+            top: -20px;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--azul-escuro);
+            font-size: 16px;
+        }
+        
+        .info-box {
+            background-color: #e8f4fc;
+            border-left: 4px solid var(--azul);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: var(--sombra-suave);
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: var(--azul-escuro);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .trend-icon {
+            font-size: 16px;
+            margin-left: 4px;
+        }
+        
+        .trend-up { color: var(--verde); }
+        .trend-down { color: var(--vermelho); }
+        .trend-stable { color: var(--azul); }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+        
+        .badge-verde { background-color: var(--verde); color: white; }
+        .badge-amarelo { background-color: var(--amarelo); color: var(--preto); }
+        .badge-vermelho { background-color: var(--vermelho); color: white; }
+        
+        .hidden { display: none; }
+        
+        .historico-item {
+            background: var(--branco);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column; /* Stack vertically on mobile */
+            align-items: flex-start;
+            box-shadow: var(--sombra-suave);
+            font-size: 14px;
+        }
+        
+        .historico-item:hover {
+            box-shadow: var(--sombra-media);
+        }
+        
+        .historico-data {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px; /* Space between date and metrics */
+        }
+        
+        .historico-metricas {
+            display: flex;
+            flex-direction: column; /* Stack metrics vertically */
+            gap: 5px;
+            width: 100%; /* Take full width */
+        }
+        
+        .historico-metrica {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align metrics */
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 40px;
+            color: var(--cinza-medio);
+            font-size: 13px;
+        }
+        
+        .footer a {
+            color: var(--azul);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .risk-meter-container {
+            margin: 25px 0;
+            padding: 15px;
+            background: var(--branco);
+            border-radius: var(--borda-radius);
+            box-shadow: var(--sombra-suave);
+        }
+        
+        .risk-meter-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--cinza-escuro);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+        }
+        
+        .risk-meter {
+            height: 10px;
+            background: linear-gradient(to right, var(--verde), var(--amarelo), var(--vermelho));
+            border-radius: 5px;
+            margin: 12px 0;
+            position: relative;
+        }
+        
+        .risk-pointer {
+            position: absolute;
+            top: -6px;
+            width: 4px;
+            height: 22px;
+            background: var(--cinza-escuro);
+            transform: translateX(-50%);
+            z-index: 1;
+            border-radius: 2px;
+        }
+        
+        .risk-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--cinza-medio);
+        }
+        
+        .risk-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        .risk-low { color: var(--verde); }
+        .risk-moderate { color: var(--amarelo); }
+        .risk-high { color: var(--vermelho); }
+        
+        .alert-box {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--amarelo);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: var(--sombra-suave);
+        }
+        
+        .alert-box h3 {
+            margin-top: 0;
+            color: var(--cinza-escuro);
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .alert-box p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .alert-citation {
+            font-size: 11px;
+            font-style: italic;
+            color: var(--cinza-medio);
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid var(--cinza-claro);
+        }
+        
+        .contact-coach {
+            font-weight: 600;
+            color: var(--vermelho);
+            margin-top: 12px;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        
+        /* Specific overrides for larger screens if needed */
+        @media (min-width: 769px) {
+            h1.main-title {
+                font-size: 48px;
+            }
+            .subtitle {
+                font-size: 16px;
+            }
+            .card {
+                padding: 30px;
+            }
+            .form-group {
+                margin-bottom: 25px;
+            }
+            label {
+                font-size: 16px;
+            }
+            .input-hint {
+                font-size: 13px;
+            }
+            input, select {
+                padding: 14px 16px;
+            }
+            .time-inputs {
+                flex-direction: row;
+            }
+            button {
+                padding: 16px 24px;
+            }
+            .status-card {
+                padding: 40px;
+                font-size: 28px;
+            }
+            .status-icon {
+                font-size: 48px;
+            }
+            .recomendacao {
+                padding: 25px;
+            }
+            .recomendacao h3 {
+                font-size: 18px;
+            }
+            .recomendacao li {
+                font-size: 16px;
+            }
+            .chart-container {
+                height: 250px;
+            }
+            .chart-bar-container {
+                width: 40px;
+            }
+            .chart-bar {
+                width: 30px;
+            }
+            .chart-bar-label {
+                font-size: 12px;
+            }
+            .chart-bar-value {
+                font-size: 12px;
+            }
+            .info-box {
+                padding: 20px;
+            }
+            .info-box h3 {
+                font-size: 18px;
+            }
+            .info-box p {
+                font-size: 16px;
+            }
+            .historico-item {
+                flex-direction: row;
+                align-items: center;
+                font-size: 16px;
+            }
+            .historico-data {
+                margin-bottom: 0;
+            }
+            .historico-metricas {
+                flex-direction: row;
+                gap: 15px;
+            }
+            .risk-meter-container {
+                padding: 20px;
+            }
+            .risk-meter-title {
+                font-size: 16px;
+            }
+            .risk-value {
+                font-size: 24px;
+            }
+            .alert-box {
+                padding: 20px;
+            }
+            .alert-box h3 {
+                font-size: 18px;
+            }
+            .alert-box p {
+                font-size: 16px;
+            }
+            .alert-citation {
+                font-size: 12px;
+            }
+            .contact-coach {
+                font-size: 16px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="main-title">TRAIL PULSE</h1>
+            <div class="subtitle">Sistema de Prontidão FETTER TRAIL TRAINING®</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="info-box">
+                <h3>Como utilizar o TrailPulse:</h3>
+                <p><strong>RMSSD:</strong> Variabilidade cardíaca medida ao acordar, preferencialmente deitado ou sentado. Use seu Garmin ou outro dispositivo com HRV.</p>
+                <p><strong>Tempo de sono:</strong> Total de horas e minutos dormidos na noite anterior.</p>
+                <p><strong>Qualidade do sono:</strong> Sua percepção subjetiva da qualidade do sono, de 1 (péssimo) a 10 (excelente).</p>
+                <p>Preencha os dados diariamente para obter recomendações personalizadas e acompanhar suas tendências de recuperação.</p>
+            </div>
+            
+            <div class="card-title">Registro Diário</div>
+            
+            <div class="form-group">
+                <label for="data">Data do registro:</label>
+                <input type="date" id="data" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="rmssd">RMSSD (Variabilidade Cardíaca):</label>
+                <input type="number" id="rmssd" min="0" step="1" placeholder="Ex: 65" required>
+                <span class="input-hint">Valores típicos: 30-100ms. Quanto maior, melhor sua recuperação.</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="sono-horas">Tempo de sono:</label>
+                <div class="time-inputs">
+                    <input type="number" id="sono-horas" min="0" max="24" step="1" placeholder="Horas" required>
+                    <input type="number" id="sono-minutos" min="0" max="59" step="1" placeholder="Minutos" required>
+                </div>
+                <span class="input-hint">Exemplo: 7 horas e 30 minutos</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="qualidade">Qualidade do sono (1-10):</label>
+                <input type="number" id="qualidade" min="1" max="10" step="1" placeholder="Ex: 8" required>
+                <span class="input-hint">1 = Péssimo, 10 = Excelente</span>
+            </div>
+            
+            <button id="btnRegistrar">ANALISAR PRONTIDÃO</button>
+        </div>
+        
+        <div id="resultado" class="hidden">
+            <div id="status" class="status-card">
+                <div class="status-card-content">
+                    <span class="status-icon">⚡</span>
+                    <div id="status-text">PRONTIDÃO ALTA</div>
+                </div>
+            </div>
+            
+            <div id="risk-meter-container" class="risk-meter-container">
+                <div class="risk-meter-title">
+                    Risco de Overtraining
+                    <span id="risk-value" class="risk-value risk-low">2/10</span>
+                </div>
+                <div class="risk-meter">
+                    <div id="risk-pointer" class="risk-pointer" style="left: 20%;"></div>
+                </div>
+                <div class="risk-labels">
+                    <span>Baixo</span>
+                    <span>Moderado</span>
+                    <span>Alto</span>
+                </div>
+                <div id="risk-description"></div>
+            </div>
+            
+            <div id="alert-box" class="alert-box hidden">
+                <h3><span class="alert-icon">⚠️</span> Alerta de Monitoramento</h3>
+                <div id="alert-content"></div>
+                <div id="alert-citation" class="alert-citation"></div>
+                <p class="contact-coach">Recomendamos fortemente que você entre em contato com o treinador Fetter para discutir estes sinais e ajustar seu plano.</p>
+            </div>
+            
+            <div id="recomendacao" class="recomendacao"></div>
+            
+            <div class="card">
+                <div class="card-title">Análise Científica</div>
+                <div id="analise"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Histórico de Recuperação</div>
+            <div id="historicoLista"></div>
+            
+            <div class="chart-title">Tendência do RMSSD (últimos 7 dias)</div>
+            <div class="chart-container" id="chartRmssd"></div>
+            
+            <div class="chart-title">Tendência do Sono (últimos 7 dias)</div>
+            <div class="chart-container" id="chartSono"></div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>TrailPulse - Sistema de Prontidão FETTER TRAIL TRAINING® &copy; 2025</p>
+        <p>Desenvolvido com base em ciência aplicada ao treinamento de corrida em trilha</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const btnRegistrar = document.getElementById('btnRegistrar');
+            const resultadoDiv = document.getElementById('resultado');
+            const statusDiv = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+            const recomendacaoDiv = document.getElementById('recomendacao');
+            const analiseDiv = document.getElementById('analise');
+            const historicoLista = document.getElementById('historicoLista');
+            const chartRmssd = document.getElementById('chartRmssd');
+            const chartSono = document.getElementById('chartSono');
+            const riskPointer = document.getElementById('risk-pointer');
+            const riskValue = document.getElementById('risk-value');
+            const riskDescription = document.getElementById('risk-description');
+            const alertBox = document.getElementById('alert-box');
+            const alertContent = document.getElementById('alert-content');
+            const alertCitation = document.getElementById('alert-citation');
+            
+            // Carrega dados salvos ou inicializa array vazio
+            let dados = JSON.parse(localStorage.getItem('dadosRecuperacaoFetter')) || [];
+            
+            // Configura data atual como padrão
+            document.getElementById('data').valueAsDate = new Date();
+            document.getElementById('sono-horas').value = "7";
+            document.getElementById('sono-minutos').value = "0";
+            
+            // Evento de registro
+            btnRegistrar.addEventListener('click', function() {
+                const data = document.getElementById('data').value;
+                const rmssd = parseFloat(document.getElementById('rmssd').value);
+                const sonoHoras = parseInt(document.getElementById('sono-horas').value) || 0;
+                const sonoMinutos = parseInt(document.getElementById('sono-minutos').value) || 0;
+                const sono = sonoHoras + (sonoMinutos / 60);
+                const qualidade = parseInt(document.getElementById('qualidade').value);
+                
+                // Validação básica
+                if (!data || isNaN(rmssd) || (isNaN(sonoHoras) && isNaN(sonoMinutos)) || isNaN(qualidade)) {
+                    alert('Por favor, preencha todos os campos corretamente.');
+                    return;
+                }
+                
+                if (rmssd < 10 || rmssd > 200) {
+                    alert('Valor de RMSSD inválido. Valores típicos: 30-100ms');
+                    return;
+                }
+                
+                if (sono < 2 || sono > 14) {
+                    alert('Tempo de sono inválido. Insira um valor entre 2 e 14 horas.');
+                    return;
+                }
+                
+                if (qualidade < 1 || qualidade > 10) {
+                    alert('Qualidade do sono deve ser entre 1 e 10.');
+                    return;
+                }
+                
+                // Remove entrada existente para a mesma data (evitar duplicatas)
+                dados = dados.filter(item => item.data !== data);
+                
+                // Adiciona novo registro
+                dados.unshift({
+                    data,
+                    rmssd,
+                    sono,
+                    sonoHoras,
+                    sonoMinutos,
+                    qualidade,
+                    timestamp: new Date().getTime()
+                });
+                
+                // Mantém apenas os últimos 30 registros
+                dados = dados.slice(0, 30);
+                
+                // Salva no localStorage
+                localStorage.setItem('dadosRecuperacaoFetter', JSON.stringify(dados));
+                
+                // Atualiza a interface
+                atualizarInterface();
+                
+                // Scroll suave para a seção de resultados em dispositivos móveis
+                if (window.innerWidth <= 768) {
+                    resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            function atualizarInterface() {
+                if (dados.length === 0) {
+                    historicoLista.innerHTML = '<p>Nenhum dado registrado ainda. Adicione seu primeiro registro para começar a análise.</p>';
+                    resultadoDiv.classList.add('hidden'); // Esconde resultados se não houver dados
+                    return;
+                }
+                
+                const ultimoDado = dados[0];
+                const dados7dias = dados.slice(0, Math.min(7, dados.length));
+                
+                // Calcula médias e referências personalizadas
+                const mediaRmssd = calcularMedia(dados7dias.map(d => d.rmssd));
+                const mediaSono = calcularMedia(dados7dias.map(d => d.sono));
+                const mediaQualidade = calcularMedia(dados7dias.map(d => d.qualidade));
+                
+                // Calcula linha de base personalizada (média dos 3 melhores valores)
+                const melhoresRmssd = [...dados7dias].sort((a, b) => b.rmssd - a.rmssd).slice(0, 3);
+                const baselineRmssd = calcularMedia(melhoresRmssd.map(d => d.rmssd));
+                
+                // Avaliação de status com algoritmo aprimorado
+                const status = avaliarStatus(ultimoDado, mediaRmssd, mediaSono, mediaQualidade, baselineRmssd);
+                
+                // Cálculo de risco de overtraining
+                const risco = calcularRiscoOvertraining(dados7dias, ultimoDado, baselineRmssd);
+                
+                // Análise científica personalizada
+                const analise = gerarAnalise(ultimoDado, dados7dias, baselineRmssd);
+                
+                // Atualiza UI
+                mostrarResultado(status, analise, ultimoDado, risco);
+                mostrarHistorico(dados7dias);
+                criarGraficos(dados7dias);
+                
+                resultadoDiv.classList.remove('hidden');
+            }
+            
+            function calcularMedia(valores) {
+                if (valores.length === 0) return 0;
+                return valores.reduce((a, b) => a + b, 0) / valores.length;
+            }
+            
+            function avaliarStatus(dado, mediaRmssd, mediaSono, mediaQualidade, baselineRmssd) {
+                // Algoritmo aprimorado baseado em pesquisas científicas
+                
+                // Pontuação de recuperação (0-100)
+                let scoreRmssd = 0;
+                let scoreSono = 0;
+                let scoreQualidade = 0;
+                
+                // 1. RMSSD (peso 50%)
+                // Normalizado em relação à linha de base pessoal
+                const rmssdRatio = dado.rmssd / baselineRmssd;
+                if (rmssdRatio >= 0.9) {
+                    scoreRmssd = 50; // Excelente
+                } else if (rmssdRatio >= 0.8) {
+                    scoreRmssd = 40; // Muito bom
+                } else if (rmssdRatio >= 0.7) {
+                    scoreRmssd = 30; // Bom
+                } else if (rmssdRatio >= 0.6) {
+                    scoreRmssd = 20; // Regular
+                } else if (rmssdRatio >= 0.5) {
+                    scoreRmssd = 10; // Baixo
+                } else {
+                    scoreRmssd = 0;  // Muito baixo
+                }
+                
+                // 2. Sono (peso 30%)
+                if (dado.sono >= 8) {
+                    scoreSono = 30; // Excelente
+                } else if (dado.sono >= 7) {
+                    scoreSono = 25; // Muito bom
+                } else if (dado.sono >= 6) {
+                    scoreSono = 20; // Bom
+                } else if (dado.sono >= 5) {
+                    scoreSono = 10; // Regular
+                } else {
+                    scoreSono = 0;  // Insuficiente
+                }
+                
+                // 3. Qualidade do sono (peso 20%)
+                if (dado.qualidade >= 8) {
+                    scoreQualidade = 20; // Excelente
+                } else if (dado.qualidade >= 7) {
+                    scoreQualidade = 15; // Muito bom
+                } else if (dado.qualidade >= 6) {
+                    scoreQualidade = 10; // Bom
+                } else if (dado.qualidade >= 5) {
+                    scoreQualidade = 5;  // Regular
+                } else {
+                    scoreQualidade = 0;  // Ruim
+                }
+                
+                // Score total (0-100)
+                const scoreTotal = scoreRmssd + scoreSono + scoreQualidade;
+                
+                // Determina status baseado no score total
+                if (scoreTotal >= 80) {
+                    return {
+                        cor: 'verde',
+                        texto: 'PRONTIDÃO ALTA',
+                        icon: '🔋',
+                        recomendacao: `
+                            <h3>Recomendações Personalizadas para Hoje:</h3>
+                            <ul>
+                                <li><strong>Treino de alta intensidade liberado</strong> - Seu corpo demonstra excelentes indicadores de recuperação, com RMSSD elevado (${dado.rmssd}ms) e padrão de sono adequado (${formatarTempo(dado.sonoHoras, dado.sonoMinutos)}).</li>
+                                <li>Ideal para sessões de intervalados em subida, treinos de limiar anaeróbio (Z3) ou longos com intensidade moderada a alta em terreno técnico.</li>
+                                <li>Aproveite para trabalhar em zonas de alta intensidade (Z3) ou volume elevado, conforme seu plano periodizado.</li>
+                                <li>Sugestão específica: Intervalados 6-8x3min em subida com recuperação ativa de 90s, ou sessão longa progressiva com últimos 20-30min em ritmo de limiar (Z3).</li>
+                                <li>Mantenha a hidratação adequada (500-750ml/hora) e considere suplementação de carboidratos para sessões acima de 90min.</li>
+                                <li>Mesmo com boa recuperação, realize sua rotina de mobilidade e exercícios preventivos pré e pós-treino.</li>
+                            </ul>
+                            <div class="recomendacao-footer" style="color:var(--verde);">
+                                Condições ideais para performance máxima e adaptações de treino. Aproveite este momento para estímulos de alta qualidade.
+                            </div>
+                        `,
+                        scoreTotal: scoreTotal
+                    };
+                } else if (scoreTotal >= 60) {
+                    return {
+                        cor: 'amarelo',
+                        texto: 'PRONTIDÃO MODERADA',
+                        icon: '⚡',
+                        recomendacao: `
+                            <h3>Recomendações Personalizadas para Hoje:</h3>
+                            <ul>
+                                <li><strong>Treino de intensidade moderada recomendado</strong> - Seus indicadores mostram recuperação parcial, com RMSSD em ${dado.rmssd}ms e padrão de sono de ${formatarTempo(dado.sonoHoras, dado.sonoMinutos)}.</li>
+                                <li>Ideal para treinos técnicos em terreno variado, rodagens em Z1 (baixa intensidade) ou trabalhos de força específicos para trilha.</li>
+                                <li>Evite sessões de alta intensidade (Z3) prolongadas ou volumes muito elevados que possam comprometer sua recuperação.</li>
+                                <li>Sugestão específica: Treino técnico em descida com foco em eficiência e economia de movimento, ou rodagem de 40-60min em Z1 em terreno misto.</li>
+                                <li>Foque em qualidade técnica, eficiência de movimento e economia de corrida em vez de intensidade cardiovascular.</li>
+                                <li>Priorize a recuperação ativa pós-treino com 10-15min de mobilidade dinâmica e hidratação adequada com eletrólitos.</li>
+                                <li class="contact-coach"><strong>Atenção:</strong> Se este padrão persistir, entre em contato com o treinador Fetter para avaliar seu plano.</li>
+                            </ul>
+                            <div class="recomendacao-footer" style="color:var(--amarelo);">
+                                Monitore suas sensações durante o treino e esteja atento a sinais de fadiga excessiva. Ajuste a intensidade conforme necessário.
+                            </div>
+                        `,
+                        scoreTotal: scoreTotal
+                    };
+                } else {
+                    return {
+                        cor: 'vermelho',
+                        texto: 'PRONTIDÃO BAIXA',
+                        icon: '🔻',
+                        recomendacao: `
+                            <h3>Recomendações Personalizadas para Hoje:</h3>
+                            <ul>
+                                <li><strong>Recuperação prioritária</strong> - Seus indicadores mostram sinais claros de recuperação insuficiente, com RMSSD reduzido (${dado.rmssd}ms) e padrão de sono comprometido (${formatarTempo(dado.sonoHoras, dado.sonoMinutos)}).</li>
+                                <li>Ideal para descanso ativo, caminhada leve em natureza (30-45min), ou sessão curta de mobilidade/alongamento (15-20min).</li>
+                                <li>Evite completamente treinos de intensidade moderada (Z2) ou alta (Z3), mesmo que se sinta bem subjetivamente.</li>
+                                <li>Sugestão específica: Caminhada contemplativa em trilha leve, yoga restaurativo ou técnicas de respiração para ativação parassimpática.</li>
+                                <li>Priorize sono de qualidade (aumente em 1h sua duração habitual), hidratação adequada (2-3L ao longo do dia) e nutrição anti-inflamatória.</li>
+                                <li>Considere técnicas de recuperação como contraste térmico (3min frio/1min quente, 3-5 ciclos), compressão ou massagem suave.</li>
+                                <li class="contact-coach"><strong>Atenção:</strong> Entre em contato com o treinador Fetter para discutir estes sinais e ajustar seu plano de treinamento imediatamente.</li>
+                            </ul>
+                            <div class="recomendacao-footer" style="color:var(--vermelho);">
+                                Lembre-se: a recuperação é o momento em que seu corpo se adapta e evolui. Ignorar estes sinais pode levar a overtraining e retrocesso no desempenho.
+                            </div>
+                        `,
+                        scoreTotal: scoreTotal
+                    };
+                }
+            }
+            
+            function calcularRiscoOvertraining(dados7dias, dadoAtual, baselineRmssd) {
+                if (dados7dias.length < 3) return { score: 0, alerta: null };
+                
+                let score = 0;
+                let alerta = null;
+                
+                // 1. RMSSD em relação à linha de base (peso maior)
+                const rmssdRatio = dadoAtual.rmssd / baselineRmssd;
+                if (rmssdRatio <= 0.5) {
+                    score += 4;
+                    alerta = {
+                        texto: "Redução significativa da VFC detectada",
+                        detalhe: `Sua variabilidade cardíaca atual está ${Math.round((1-rmssdRatio)*100)}% abaixo da sua linha de base pessoal, o que é um forte indicador de sobrecarga do sistema nervoso autônomo.`,
+                        citacao: "Bellenger et al. (2016). Monitoring Athletic Training Status Through Autonomic Heart Rate Regulation: A Systematic Review and Meta-Analysis. Sports Medicine, 46(10), 1461-1486."
+                    };
+                } else if (rmssdRatio <= 0.7) {
+                    score += 2;
+                }
+                
+                // 2. Tendência de RMSSD
+                const rmssdTrend = calcularTendencia(dados7dias.map(d => d.rmssd));
+                if (rmssdTrend < -0.8 && !alerta) {
+                    score += 3;
+                    alerta = {
+                        texto: "Tendência negativa consistente da VFC",
+                        detalhe: "Sua variabilidade cardíaca está em declínio consistente nos últimos dias, sugerindo acúmulo progressivo de fadiga e possível sobrecarga do sistema nervoso autônomo.",
+                        citacao: "Plews et al. (2013). Training Adaptation and Heart Rate Variability in Elite Endurance Athletes: Opening the Door to Effective Monitoring. Sports Medicine, 43(9), 773-781."
+                    };
+                } else if (rmssdTrend < -0.5) {
+                    score += 2;
+                }
+                
+                // 3. Sono insuficiente
+                const sonoInsuficiente = dados7dias.filter(d => d.sono < 7).length;
+                if (sonoInsuficiente >= 3 && !alerta) {
+                    score += 3;
+                    alerta = {
+                        texto: "Padrão de sono insuficiente detectado",
+                        detalhe: `Você teve ${sonoInsuficiente} noites com menos de 7 horas de sono na última semana. Privação crônica de sono está fortemente associada a recuperação inadequada e maior risco de overtraining.`,
+                        citacao: "Watson AM. (2017). Sleep and Athletic Performance. Current Sports Medicine Reports, 16(6), 413-418."
+                    };
+                } else if (sonoInsuficiente >= 2) {
+                    score += 2;
+                }
+                
+                // 4. Qualidade de sono ruim
+                const sonoRuim = dados7dias.filter(d => d.qualidade <= 5).length;
+                if (sonoRuim >= 3 && !alerta) {
+                    score += 2;
+                    alerta = {
+                        texto: "Qualidade de sono comprometida",
+                        detalhe: "Você reportou baixa qualidade de sono em múltiplos dias recentes. Mesmo com duração adequada, sono de baixa qualidade compromete a recuperação hormonal e neuromuscular.",
+                        citacao: "Lastella M, et al. (2018). Sleep and Recovery in Team Sport: Current Sleep-Related Issues Facing Professional Team-Sport Athletes. International Journal of Sports Physiology and Performance, 13(6), 724-733."
+                    };
+                }
+                
+                // 5. Combinação de fatores
+                if (rmssdRatio <= 0.7 && sonoInsuficiente >= 2 && !alerta) {
+                    score += 2;
+                    alerta = {
+                        texto: "Múltiplos fatores de risco detectados",
+                        detalhe: "A combinação de VFC reduzida e sono insuficiente aumenta significativamente o risco de overtraining e queda de desempenho. Esta combinação é particularmente preocupante para atletas de endurance.",
+                        citacao: "Meeusen R, et al. (2013). Prevention, diagnosis and treatment of the overtraining syndrome. European Journal of Sport Science, 13(1), 1-14."
+                    };
+                }
+                
+                // Normaliza para escala 0-10
+                const scoreNormalizado = Math.min(Math.round(score * 1.2), 10);
+                
+                return { 
+                    score: scoreNormalizado,
+                    alerta: alerta
+                };
+            }
+            
+            function gerarAnalise(dado, dados7dias, baselineRmssd) {
+                if (dados7dias.length < 2) {
+                    return `<p>Colete mais dados para uma análise completa. Recomendamos pelo menos 3 dias de registros.</p>`;
+                }
+                
+                // Tendências
+                const rmssdTrend = calcularTendencia(dados7dias.map(d => d.rmssd));
+                const sonoTrend = calcularTendencia(dados7dias.map(d => d.sono));
+                
+                // Análise de RMSSD
+                let analiseRmssd = '';
+                const rmssdRatio = dado.rmssd / baselineRmssd;
+                
+                if (rmssdRatio >= 0.9) {
+                    analiseRmssd = `Seu RMSSD está excelente (${Math.round(rmssdRatio*100)}% da sua linha de base), indicando ótima recuperação do sistema nervoso autônomo e equilíbrio simpático-parassimpático.`;
+                } else if (rmssdRatio >= 0.7) {
+                    analiseRmssd = `Seu RMSSD está bom (${Math.round(rmssdRatio*100)}% da sua linha de base), indicando recuperação adequada do sistema nervoso autônomo e predominância parassimpática.`;
+                } else if (rmssdRatio >= 0.5) {
+                    analiseRmssd = `Seu RMSSD está reduzido (${Math.round(rmssdRatio*100)}% da sua linha de base), sugerindo recuperação parcial do sistema nervoso autônomo e possível desequilíbrio simpático-parassimpático.`;
+                } else {
+                    analiseRmssd = `Seu RMSSD está muito baixo (apenas ${Math.round(rmssdRatio*100)}% da sua linha de base), indicando recuperação insuficiente do sistema nervoso autônomo e provável dominância simpática.`;
+                }
+                
+                // Análise de tendência
+                let analiseTendencia = '';
+                if (rmssdTrend > 0.1) {
+                    analiseTendencia = `Sua VFC está em tendência positiva nos últimos dias, sugerindo adaptação positiva ao treinamento e melhora progressiva na capacidade de recuperação.`;
+                } else if (rmssdTrend < -0.1) {
+                    analiseTendencia = `Sua VFC está em tendência negativa nos últimos dias, o que pode indicar acúmulo de fadiga, estresse ou carga de treinamento excessiva para sua capacidade atual de recuperação.`;
+                } else {
+                    analiseTendencia = `Sua VFC está estável nos últimos dias, sugerindo equilíbrio entre carga de treinamento e recuperação, com manutenção da homeostase autonômica.`;
+                }
+                
+                // Análise de sono
+                let analiseSono = '';
+                const sonoFormatado = formatarTempo(dado.sonoHoras, dado.sonoMinutos);
+                
+                if (dado.sono >= 8 && dado.qualidade >= 8) {
+                    analiseSono = `Seu sono foi excelente em quantidade (${sonoFormatado}) e qualidade (${dado.qualidade}/10), contribuindo positivamente para sua recuperação hormonal, neuromuscular e cognitiva.`;
+                } else if (dado.sono >= 7 && dado.qualidade >= 7) {
+                    analiseSono = `Seu sono foi bom em quantidade (${sonoFormatado}) e qualidade (${dado.qualidade}/10), favorecendo sua recuperação e processos adaptativos pós-exercício.`;
+                } else if (dado.sono < 6 || dado.qualidade < 6) {
+                    analiseSono = `Seu sono foi insuficiente em quantidade (${sonoFormatado}) e/ou qualidade (${dado.qualidade}/10), comprometendo sua recuperação e potencialmente limitando as adaptações ao treinamento.`;
+                } else {
+                    analiseSono = `Seu sono foi moderado em quantidade (${sonoFormatado}) e qualidade (${dado.qualidade}/10), permitindo recuperação parcial, mas possivelmente subótima para atletas de endurance.`;
+                }
+                
+                // Recomendação científica
+                let recomendacaoCientifica = '';
+                if (rmssdRatio < 0.7 && (dado.sono < 7 || dado.qualidade < 7)) {
+                    recomendacaoCientifica = `A combinação de VFC reduzida (${Math.round(rmssdRatio*100)}% da linha de base) e sono insuficiente (${sonoFormatado}, qualidade ${dado.qualidade}/10) sugere necessidade de priorizar recuperação. Estudos mostram que treinar intensamente neste estado pode prolongar o tempo de recuperação em até 72h e aumentar o risco de lesões em 2-3x.`;
+                } else if (rmssdRatio < 0.7) {
+                    recomendacaoCientifica = `Sua VFC reduzida (${Math.round(rmssdRatio*100)}% da linha de base) sugere que o sistema nervoso autônomo ainda está em processo de recuperação. Pesquisas indicam que treinos de baixa intensidade (Z1) podem acelerar este processo em 24-48h, enquanto alta intensidade (Z3) pode prolongá-lo em até 72-96h.`;
+                } else if (dado.sono < 7 || dado.qualidade < 7) {
+                    recomendacaoCientifica = `Apesar da boa VFC, seu sono insuficiente (${sonoFormatado}, qualidade ${dado.qualidade}/10) pode comprometer a consolidação das adaptações de treino e a recuperação muscular. Estudos mostram que o sono é fundamental para processos anabólicos, síntese proteica e reparação tecidual, com déficits de sono reduzindo a ressíntese de glicogênio em até 30%.`;
+                }
+                
+                return `
+                    <p><strong>Análise de VFC:</strong> ${analiseRmssd}</p>
+                    <p><strong>Tendência recente:</strong> ${analiseTendencia}</p>
+                    <p><strong>Análise do sono:</strong> ${analiseSono}</p>
+                    ${recomendacaoCientifica ? `<p><strong>Recomendação baseada em evidências:</strong> ${recomendacaoCientifica}</p>` : ''}
+                `;
+            }
+            
+            function calcularTendencia(valores) {
+                if (valores.length < 2) return 0;
+                
+                const x = Array.from({length: valores.length}, (_, i) => i);
+                const y = valores;
+                
+                const n = y.length;
+                const sumX = x.reduce((a, b) => a + b, 0);
+                const sumY = y.reduce((a, b) => a + b, 0);
+                const sumXY = x.reduce((a, _, i) => a + x[i] * y[i], 0);
+                const sumXX = x.reduce((a, b) => a + b * b, 0);
+                
+                const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                return slope;
+            }
+            
+            function mostrarResultado(status, analise, dado, risco) {
+                statusDiv.className = `status-card status-${status.cor}`;
+                statusText.textContent = status.texto;
+                document.querySelector('.status-icon').textContent = status.icon;
+                
+                recomendacaoDiv.innerHTML = status.recomendacao;
+                analiseDiv.innerHTML = analise;
+                
+                // Atualiza medidor de risco
+                riskPointer.style.left = `${risco.score * 10}%`;
+                riskValue.textContent = `${risco.score}/10`;
+                
+                // Define classe de cor para o valor de risco
+                riskValue.className = 'risk-value';
+                if (risco.score <= 3) {
+                    riskValue.classList.add('risk-low');
+                    riskDescription.innerHTML = '<p style="color:var(--verde);margin-top:10px;text-align:center;font-weight:600;">Baixo risco de overtraining</p>';
+                } else if (risco.score <= 6) {
+                    riskValue.classList.add('risk-moderate');
+                    riskDescription.innerHTML = '<p style="color:var(--amarelo);margin-top:10px;text-align:center;font-weight:600;">Risco moderado de overtraining - Monitore cuidadosamente</p>';
+                } else {
+                    riskValue.classList.add('risk-high');
+                    riskDescription.innerHTML = '<p style="color:var(--vermelho);margin-top:10px;text-align:center;font-weight:600;">ALTO RISCO de overtraining - Atenção necessária</p>';
+                }
+                
+                // Mostra alerta se existir
+                if (risco.alerta || risco.score > 6) { // Adiciona alerta se risco for alto
+                    alertContent.innerHTML = `
+                        <p><strong>${risco.alerta ? risco.alerta.texto : 'Risco Elevado de Overtraining Detectado'}</strong></p>
+                        <p>${risco.alerta ? risco.alerta.detalhe : 'Seu score de risco indica uma combinação de fatores que aumentam significativamente a probabilidade de overtraining. É crucial ajustar sua carga de treino e priorizar a recuperação.'}</p>
+                    `;
+                    alertCitation.textContent = `Fonte: ${risco.alerta ? risco.alerta.citacao : 'Meeusen R, et al. (2013). Prevention, diagnosis and treatment of the overtraining syndrome. European Journal of Sport Science, 13(1), 1-14.'}`;
+                    alertBox.classList.remove('hidden');
+                } else {
+                    alertBox.classList.add('hidden');
+                }
+            }
+            
+            function mostrarHistorico(dados7dias) {
+                if (dados7dias.length === 0) {
+                    historicoLista.innerHTML = '<p>Nenhum dado registrado ainda. Adicione seu primeiro registro para começar a análise.</p>';
+                    return;
+                }
+                
+                historicoLista.innerHTML = '';
+                
+                dados7dias.forEach((dado, index) => {
+                    const dataFormatada = new Date(dado.data).toLocaleDateString('pt-BR', {weekday: 'short', day: 'numeric', month: 'short'});
+                    
+                    // Determina ícone de tendência para RMSSD
+                    let rmssdIcon = '';
+                    if (index < dados7dias.length - 1) {
+                        const diff = dado.rmssd - dados7dias[index+1].rmssd;
+                        if (diff > 5) rmssdIcon = '<span class="trend-icon trend-up">↑</span>';
+                        else if (diff < -5) rmssdIcon = '<span class="trend-icon trend-down">↓</span>';
+                        else rmssdIcon = '<span class="trend-icon trend-stable">→</span>';
+                    }
+                    
+                    // Determina badge de status
+                    let statusBadge = '';
+                    const mediaRmssd = calcularMedia(dados7dias.map(d => d.rmssd));
+                    
+                    if (dado.rmssd < mediaRmssd * 0.7 || dado.sono < 5 || dado.qualidade <= 3) {
+                        statusBadge = '<span class="badge badge-vermelho">Baixa</span>';
+                    } else if (dado.rmssd < mediaRmssd * 0.85 || dado.sono < 7 || dado.qualidade <= 6) {
+                        statusBadge = '<span class="badge badge-amarelo">Moderada</span>';
+                    } else {
+                        statusBadge = '<span class="badge badge-verde">Alta</span>';
+                    }
+                    
+                    // Formata tempo de sono
+                    const sonoFormatado = formatarTempo(dado.sonoHoras || Math.floor(dado.sono), dado.sonoMinutos || Math.round((dado.sono % 1) * 60));
+                    
+                    const itemHTML = `
+                        <div class="historico-item">
+                            <div class="historico-data">
+                                ${dataFormatada} ${statusBadge}
+                            </div>
+                            <div class="historico-metricas">
+                                <div class="historico-metrica">
+                                    <span>RMSSD:</span> <strong>${dado.rmssd}</strong>ms ${rmssdIcon}
+                                </div>
+                                <div class="historico-metrica">
+                                    <span>Sono:</span> <strong>${sonoFormatado}</strong> (<strong>${dado.qualidade}</strong>/10)
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    historicoLista.innerHTML += itemHTML;
+                });
+            }
+            
+            function criarGraficos(dados7dias) {
+                if (dados7dias.length === 0) return;
+                
+                // Limpa gráficos anteriores
+                chartRmssd.innerHTML = '';
+                chartSono.innerHTML = '';
+                
+                // Prepara dados ordenados do mais antigo para o mais novo
+                const dadosOrdenados = [...dados7dias].reverse();
+                const datas = dadosOrdenados.map(d => 
+                    new Date(d.data).toLocaleDateString('pt-BR', {weekday: 'short'}).substring(0, 3)
+                );
+                
+                // Valores para normalização
+                const valoresRmssd = dadosOrdenados.map(d => d.rmssd);
+                const maxRmssd = Math.max(...valoresRmssd) * 1.1;
+                const minRmssd = Math.min(20, Math.min(...valoresRmssd) * 0.9);
+                
+                const valoresSono = dadosOrdenados.map(d => d.sono);
+                const maxSono = Math.max(10, Math.max(...valoresSono) * 1.1);
+                
+                // Cria gráfico de RMSSD
+                valoresRmssd.forEach((valor, i) => {
+                    const altura = ((valor - minRmssd) / (maxRmssd - minRmssd)) * 180; // Reduced height for mobile
+                    const mediaRmssd = calcularMedia(valoresRmssd);
+                    
+                    let cor;
+                    if (valor >= mediaRmssd * 0.9) {
+                        cor = 'var(--verde)';
+                    } else if (valor >= mediaRmssd * 0.7) {
+                        cor = 'var(--amarelo)';
+                    } else {
+                        cor = 'var(--vermelho)';
+                    }
+                    
+                    const container = document.createElement('div');
+                    container.className = 'chart-bar-container';
+                    
+                    const barra = document.createElement('div');
+                    barra.className = 'chart-bar';
+                    barra.style.height = `${altura}px`;
+                    barra.style.backgroundColor = cor;
+                    
+                    const valorLabel = document.createElement('div');
+                    valorLabel.className = 'chart-bar-value';
+                    valorLabel.textContent = valor;
+                    valorLabel.style.color = cor;
+                    
+                    const dataLabel = document.createElement('div');
+                    dataLabel.className = 'chart-bar-label';
+                    dataLabel.textContent = datas[i];
+                    
+                    barra.appendChild(valorLabel);
+                    container.appendChild(barra);
+                    container.appendChild(dataLabel);
+                    chartRmssd.appendChild(container);
+                });
+                
+                // Cria gráfico de sono
+                valoresSono.forEach((valor, i) => {
+                    const altura = (valor / maxSono) * 180; // Reduced height for mobile
+                    
+                    let cor;
+                    if (valor >= 7.5) {
+                        cor = 'var(--verde)';
+                    } else if (valor >= 6) {
+                        cor = 'var(--amarelo)';
+                    } else {
+                        cor = 'var(--vermelho)';
+                    }
+                    
+                    const container = document.createElement('div');
+                    container.className = 'chart-bar-container';
+                    
+                    const barra = document.createElement('div');
+                    barra.className = 'chart-bar';
+                    barra.style.height = `${altura}px`;
+                    barra.style.backgroundColor = cor;
+                    
+                    const valorLabel = document.createElement('div');
+                    valorLabel.className = 'chart-bar-value';
+                    
+                    // Formata o valor do sono para exibição
+                    const horas = Math.floor(valor);
+                    const minutos = Math.round((valor - horas) * 60);
+                    valorLabel.textContent = formatarTempoAbreviado(horas, minutos);
+                    valorLabel.style.color = cor;
+                    
+                    const dataLabel = document.createElement('div');
+                    dataLabel.className = 'chart-bar-label';
+                    dataLabel.textContent = datas[i];
+                    
+                    barra.appendChild(valorLabel);
+                    container.appendChild(barra);
+                    container.appendChild(dataLabel);
+                    chartSono.appendChild(container);
+                });
+            }
+            
+            function formatarTempo(horas, minutos) {
+                return `${horas}h${minutos > 0 ? ` ${minutos}min` : ''}`;
+            }
+            
+            function formatarTempoAbreviado(horas, minutos) {
+                return `${horas}h${minutos > 0 ? `${minutos}m` : ''}`;
+            }
+            
+            // Inicializa a interface
+            atualizarInterface();
+        });
+    </script>
+</body>
+</html>
